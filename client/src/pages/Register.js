@@ -54,14 +54,6 @@ export default function Register() {
         onChange={(e) => setPassword(e.target.value)}
         style={{ width: '100%', marginBottom: '10px' }}
       />
-      <select
-        value={role}
-        onChange={(e) => setRole(e.target.value)}
-        style={{ width: '100%', marginBottom: '10px' }}
-      >
-        <option value="user">User</option>
-        <option value="admin">Admin</option>
-      </select>
       <button onClick={handleRegister} style={{ width: '100%' }}>Register</button>
       <p style={{ marginTop: '10px' }}>
         Already have an account? <a href="/login">Login here</a>
