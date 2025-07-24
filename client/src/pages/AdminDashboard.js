@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const downloadCSV = async () => {
   try {
-    const response = await fetch('http://localhost:5000/api/admin/results/download');
+    const response = await fetch('https://aptitude-4ycu.onrender.com/api/admin/results/download');
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
 
@@ -23,7 +23,7 @@ const AdminResults = () => {
   const [results, setResults] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/admin/results')
+    axios.get('https://aptitude-4ycu.onrender.com/api/admin/results')
       .then(res => setResults(res.data))
       .catch(err => console.error(err));
   }, []);
