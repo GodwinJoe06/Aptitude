@@ -10,7 +10,7 @@ export default function Login() {
 
 const handleLogin = async () => {
   try {
-    const response = await axios.post('https://aptitude-4ycu.onrender.com/api/auth/login', {
+    const response = await axios.post('https://aptitude-ohar.onrender.com/api/auth/login', {
       email,
       password
     });

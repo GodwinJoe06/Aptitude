@@ -13,7 +13,7 @@ const Questions = () => {
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
-                const response = await axios.get('https://aptitude-4ycu.onrender.com/api/user/questions', {
+                const response = await axios.get('https://aptitude-ohar.onrender.com/api/user/questions', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -41,7 +41,7 @@ const Questions = () => {
         try {
             for (let i = 0; i < questions.length; i++) {
                 const response = await axios.post(
-                    'https://aptitude-4ycu.onrender.com/api/user/answers',
+                    'https://aptitude-ohar.onrender.com/api/user/answers',
                     {
                         questionId: questions[i]._id,
                         answer: userAnswers[i],
