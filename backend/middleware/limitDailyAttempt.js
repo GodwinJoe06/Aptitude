@@ -1,6 +1,6 @@
 const Answer = require('../models/Answers');
 
-const MAX_ANSWERS_PER_DAY = 5; // change this if your test size changes
+const MAX_ANSWERS_PER_DAY = 5; 
 
 module.exports = async function limitDailyAttempt(req, res, next) {
   try {
@@ -10,7 +10,6 @@ module.exports = async function limitDailyAttempt(req, res, next) {
 
     const userId = req.user.id;
 
-    // Compute today's start & end in server local time
     const now = new Date();
     const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
