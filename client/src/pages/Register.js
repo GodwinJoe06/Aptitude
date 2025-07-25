@@ -6,7 +6,7 @@ export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role] = useState('user');
+  const [role,setRole] = useState('user');
   const [batch, setBatch] = useState('Batch 1');
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -60,7 +60,7 @@ export default function Register() {
         />
         <select
           value={batch}
-          name ="batch"
+          name="batch"
           onChange={(e) => setBatch(e.target.value)}
           style={{ width: '100%', marginBottom: '10px' }}
         >
