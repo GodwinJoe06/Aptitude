@@ -10,6 +10,31 @@ const Questions = () => {
 
     const token = localStorage.getItem('token');
 
+useEffect(() => {
+    const handleVisibilityChange = () => {
+        if (document.hidden && !submitted) {
+            handleSubmitAnswers();
+        }
+    };
+
+    const handleBeforeUnload = (e) => {
+        if (!submitted) {
+            handleSubmitAnswers();
+        }
+        e.preventDefault();
+        e.returnValue = '';
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+}, [submitted, questions, userAnswers]);
+
+
     useEffect(() => {
         const fetchQuestions = async () => {
             try {

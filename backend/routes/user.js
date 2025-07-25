@@ -1,12 +1,13 @@
 const express = require('express');
 const auth = require('../middleware/auth');
 const role = require('../middleware/role');
+const limitDailyAttempt = require('../middleware/limitDailyAttempt');
 const Question = require('../models/Ques');
 const Answer = require('../models/Answers')
 
 const router = express.Router();
 
-router.post('/answers', auth, async (req, res) => {
+router.post('/answers', auth, limitDailyAttempt, async (req, res) => {
   const userId = req.user.id;
   const { questionId, answer } = req.body;
   console.log('Received answer:', { userId, questionId, answer });
