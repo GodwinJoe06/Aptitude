@@ -83,7 +83,7 @@ useEffect(() => {
                     'https://aptitude-ohar.onrender.com/api/user/answers',
                     {
                         questionId: questions[i]._id,
-                        answer: userAnswers[i] ? userAnswers[i] : 'therila',
+                        answer: userAnswers[i] ? userAnswers[i] : 'Therila',
                     },
                     {
                         headers: {
