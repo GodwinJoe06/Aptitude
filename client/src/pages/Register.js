@@ -7,6 +7,7 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('user');
+  const [batch , setBatch] = useState('Batch 1');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -17,11 +18,12 @@ export default function Register() {
     }
 
     try {
-      await axios.post('https://aptitude-4ycu.onrender.com/api/auth/register', {
+      await axios.post('http://localhost:5000/api/auth/register', {
         name,
         email,
         password,
-        role
+        role,
+        batch
       });
       alert('Registered successfully! Please login.');
       navigate('/');
@@ -54,6 +56,14 @@ export default function Register() {
         onChange={(e) => setPassword(e.target.value)}
         style={{ width: '100%', marginBottom: '10px' }}
       />
+      <select
+        value={role}
+        onChange={(e) => setBatch(e.target.value)}
+        style={{ width: '100%', marginBottom: '10px' }}
+      >
+        <option value="user">Batch 1</option>
+        <option value="admin">Batch 2</option>
+      </select>
       <button onClick={handleRegister} style={{ width: '100%' }}>Register</button>
       <p style={{ marginTop: '10px' }}>
         Already have an account? <a href="/login">Login here</a>

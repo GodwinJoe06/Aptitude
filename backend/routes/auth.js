@@ -6,9 +6,9 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password, role ,batch} = req.body;
   const hashed = await bcrypt.hash(password, 10);
-  const user = new User({ name, email, password: hashed, role });
+  const user = new User({ name, email, password: hashed, role ,batch});
   await user.save();
   res.json({ msg: 'Registered' });
 });
