@@ -6,7 +6,7 @@ export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('user');
+  const [role] = useState('user');
   const [batch, setBatch] = useState('Batch 1');
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ export default function Register() {
         batch
       });
       alert('Registered successfully! Please login.');
-      navigate('/');
+      navigate('/login');
     } catch (err) {
       console.error(err);
       setError(err.response?.data?.msg || 'Registration failed.');
