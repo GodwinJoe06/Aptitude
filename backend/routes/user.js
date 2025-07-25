@@ -7,7 +7,7 @@ const Answer = require('../models/Answers')
 const router = express.Router();
 
 router.post('/answers', auth, async (req, res) => {
-  const userId = req.user.id; // ✅ extracted from token
+  const userId = req.user.id;
   const { questionId, answer } = req.body;
   console.log('Received answer:', { userId, questionId, answer });
 

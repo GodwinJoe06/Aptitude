@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const User = require('./models/User'); // adjust path if needed
+const User = require('./models/User');
 require('dotenv').config();
 
 const seedUsers = async () => {
@@ -9,9 +9,8 @@ const seedUsers = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log('✅ MongoDB connected');
-
-    // Clear existing users (optional)
+    console.log('MongoDB connected');
+ 
     await User.deleteMany({});
 
     const saltRounds = 10;
@@ -38,9 +37,9 @@ const seedUsers = async () => {
     ];
 
     await User.insertMany(users);
-    console.log('✅ Users seeded successfully!');
+    console.log('Users seeded successfully!');
   } catch (err) {
-    console.error('❌ Error seeding users:', err);
+    console.error('Error seeding users:', err);
   } finally {
     mongoose.connection.close();
   }

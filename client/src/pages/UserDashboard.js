@@ -6,9 +6,9 @@ const Questions = () => {
     const [questions, setQuestions] = useState([]);
     const [userAnswers, setUserAnswers] = useState([]);
     const [submitted, setSubmitted] = useState(false);
-    const [score, setScore] = useState(0);
+    const [timeLeft, setTimeLeft] = useState(1200); 
 
-    const token = localStorage.getItem('token'); // assuming token is saved on login
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
         const fetchQuestions = async () => {
@@ -27,6 +27,22 @@ const Questions = () => {
         fetchQuestions();
     }, [token]);
 
+    useEffect(() => {
+        if (submitted || timeLeft <= 0) return;
+
+        const timer = setInterval(() => {
+            setTimeLeft((prev) => prev - 1);
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [timeLeft, submitted]);
+
+    useEffect(() => {
+        if (timeLeft === 0 && !submitted) {
+            handleSubmitAnswers();
+        }
+    }, [timeLeft, submitted]);
+
     const handleOptionChange = (index, value) => {
         const updatedAnswers = [...userAnswers];
         updatedAnswers[index] = value;
@@ -34,9 +50,7 @@ const Questions = () => {
     };
 
     const handleSubmitAnswers = async () => {
-        if (submitted) return; // prevent double submission
-
-        let tempScore = 0;
+        if (submitted) return;
 
         try {
             for (let i = 0; i < questions.length; i++) {
@@ -44,7 +58,7 @@ const Questions = () => {
                     'https://aptitude-ohar.onrender.com/api/user/answers',
                     {
                         questionId: questions[i]._id,
-                        answer: userAnswers[i],
+                        answer: userAnswers[i] ? userAnswers[i] : 'therila',
                     },
                     {
                         headers: {
@@ -52,17 +66,17 @@ const Questions = () => {
                         }
                     }
                 );
-
-                if (response.data.isCorrect) {
-                    tempScore += 1;
-                }
             }
-
-            setScore(tempScore);
             setSubmitted(true);
         } catch (err) {
             console.error('Error submitting answers:', err);
         }
+    };
+
+    const formatTime = (seconds) => {
+        const min = Math.floor(seconds / 60);
+        const sec = seconds % 60;
+        return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
     };
 
     return (
@@ -70,6 +84,7 @@ const Questions = () => {
             <h1>Survey Questions</h1>
             {!submitted ? (
                 <div>
+                    <h3>Time Left: {formatTime(timeLeft)}</h3>
                     {questions.map((question, index) => (
                         <div key={index}>
                             <h2>{question.question}</h2>
@@ -94,7 +109,7 @@ const Questions = () => {
                 </div>
             ) : (
                 <div>
-                    <h2>Your Final Score: {score} out of {questions.length}</h2>
+                    <h2>Thanks for attending the exam.</h2>
                 </div>
             )}
         </div>

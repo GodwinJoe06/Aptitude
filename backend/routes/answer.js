@@ -3,7 +3,6 @@ const router = express.Router();
 const Answer = require('../models/Answers');
 const OriginalAnswer = require('../models/AdminAnswer');
 
-// Submit user answer
 router.post('/submit-answer', async (req, res) => {
   try {
     const { userId, questionId, answer } = req.body;

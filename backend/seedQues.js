@@ -32,7 +32,7 @@ const seedDatabase = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log('✅ MongoDB connected');
+    console.log('MongoDB connected');
 
     await Question.deleteMany({});
     await Answer.deleteMany({});
@@ -68,9 +68,9 @@ const seedDatabase = async () => {
     ];
 
     await Answer.insertMany(answersData);
-    console.log('✅ Seeded correct answers!');
+    console.log('Seeded correct answers!');
   } catch (err) {
-    console.error('❌ Seeding error:', err);
+    console.error('Seeding error:', err);
   } finally {
     mongoose.connection.close();
   }

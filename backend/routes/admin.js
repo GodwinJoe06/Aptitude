@@ -3,18 +3,16 @@ const Answers = require('../models/Answers');
 const { Parser } = require('json2csv');
 const AdminAnswers = require('../models/AdminAnswer');
 const User = require('../models/User');
-const Ques = require('../models/Ques'); // ✅ Import question model
+const Ques = require('../models/Ques');
 
 const router = express.Router();
 
 router.get('/results/download', async (req, res) => {
   try {
-    // Fetch all data
     const userAnswers = await Answers.find({});
     const adminAnswers = await AdminAnswers.find({});
     const users = await User.find({});
 
-    // Create mappings
     const correctAnswerMap = {};
     adminAnswers.forEach(ans => {
       correctAnswerMap[ans.questionId.toString()] = ans.answer;
@@ -25,7 +23,6 @@ router.get('/results/download', async (req, res) => {
       userNameMap[user._id.toString()] = user.name;
     });
 
-    // Compute scores
     const scoreMap = {};
     userAnswers.forEach(ans => {
       const userId = ans.userId.toString();
@@ -43,12 +40,10 @@ router.get('/results/download', async (req, res) => {
       if (isCorrect) scoreMap[userId].Score++;
     });
 
-    // Generate CSV
     const csvData = Object.values(scoreMap);
     const parser = new Parser({ fields: ['Name', 'Score' , 'Batch'] });
     const csv = parser.parse(csvData);
 
-    // Set headers
     res.header('Content-Type', 'text/csv');
     res.attachment('user-assessment-report.csv');
     res.send(csv);
@@ -63,21 +58,18 @@ router.get('/results', async (req, res) => {
   try {
     const allUserAnswers = await Answers.find({});
     const allAdminAnswers = await AdminAnswers.find({});
-    const allQuestions = await Ques.find({}); // ✅ Fetch all questions
+    const allQuestions = await Ques.find({}); 
 
-    // Map questionId to correct answer
     const adminAnswerMap = {};
     allAdminAnswers.forEach(ans => {
       adminAnswerMap[ans.questionId] = ans.answer;
     });
 
-    // Map questionId to actual question text
     const questionMap = {};
     allQuestions.forEach(q => {
       questionMap[q._id.toString()] = q.question;
     });
 
-    // Map userId to name
     const users = await User.find({});
     const userMap = {};
     users.forEach(user => {
