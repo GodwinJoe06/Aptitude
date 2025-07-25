@@ -6,12 +6,13 @@ export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role] = useState('user');
+  const [role,setRole] = useState('user');
   const [batch, setBatch] = useState('Batch 1');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleRegister = async () => {
+  const handleRegister = async (e) => {
+    e.preventDefault();
     if (!name || !email || !password) {
       setError('All fields are required.');
       return;
@@ -58,7 +59,8 @@ export default function Register() {
           style={{ width: '100%', marginBottom: '10px' }}
         />
         <select
-          value={role}
+          value={batch}
+          name='batch'
           onChange={(e) => setBatch(e.target.value)}
           style={{ width: '100%', marginBottom: '10px' }}
         >
