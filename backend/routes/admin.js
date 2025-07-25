@@ -35,7 +35,8 @@ router.get('/results/download', async (req, res) => {
       if (!scoreMap[userId]) {
         scoreMap[userId] = {
           Name: userNameMap[userId] || 'Unknown',
-          Score: 0
+          Score: 0,
+          Batch : users.find(user => user._id.toString() === userId)?.batch || 'Unknown'
         };
       }
 
@@ -44,7 +45,7 @@ router.get('/results/download', async (req, res) => {
 
     // Generate CSV
     const csvData = Object.values(scoreMap);
-    const parser = new Parser({ fields: ['Name', 'Score'] });
+    const parser = new Parser({ fields: ['Name', 'Score' , 'Batch'] });
     const csv = parser.parse(csvData);
 
     // Set headers
