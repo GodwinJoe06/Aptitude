@@ -66,7 +66,7 @@ const Questions = () => {
     };
 
     return (
-        <div>
+        <div className='dashboard' style={{ padding: 20 }}>
             <h1>Survey Questions</h1>
             {!submitted ? (
                 <div>
@@ -90,7 +90,7 @@ const Questions = () => {
                             </div>
                         </div>
                     ))}
-                    <button onClick={handleSubmitAnswers}>Submit Answers</button>
+                    <button className='submit' onClick={handleSubmitAnswers}>Submit Answers</button>
                 </div>
             ) : (
                 <div>

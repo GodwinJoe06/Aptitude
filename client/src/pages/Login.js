@@ -8,36 +8,38 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-const handleLogin = async () => {
-  try {
-    const response = await axios.post('https://aptitude-ohar.onrender.com/api/auth/login', {
-      email,
-      password
-    });
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post('https://aptitude-ohar.onrender.com/api/auth/login', {
+        email,
+        password
+      });
 
-    const { token, user } = response.data;
+      const { token, user } = response.data;
 
-    localStorage.setItem('token', token);
-    localStorage.setItem('role', user.role);
+      localStorage.setItem('token', token);
+      localStorage.setItem('role', user.role);
 
-    if (user.role === 'admin') {
-      navigate('/admin');
-    } else {
-      navigate('/user');
+      if (user.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/user');
+      }
+
+    } catch (err) {
+      console.error('Login failed:', err);
     }
-
-  } catch (err) {
-    console.error('Login failed:', err);
-  }
-};
+  };
 
 
   return (
     <div>
-      <h2>Login</h2>
-      <input placeholder="email" onChange={e => setEmail(e.target.value)} />
-      <input type="password" placeholder="password" onChange={e => setPassword(e.target.value)} />
-      <button onClick={handleLogin}>Login</button>
+      <h2 className='login'>Login</h2>
+      <form className='form-box login-form'>
+        <input placeholder="email" onChange={e => setEmail(e.target.value)} />
+        <input type="password" placeholder="password" onChange={e => setPassword(e.target.value)} />
+        <button onClick={handleLogin}>Login</button>
+      </form>
     </div>
   );
 }

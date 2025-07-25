@@ -7,7 +7,7 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('user');
-  const [batch , setBatch] = useState('Batch 1');
+  const [batch, setBatch] = useState('Batch 1');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -35,39 +35,41 @@ export default function Register() {
 
   return (
     <div style={{ padding: '20px', maxWidth: '400px', margin: 'auto' }}>
-      <h2>Register</h2>
+      <h2 className='register'>Register</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      <input
-        placeholder="Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        style={{ width: '100%', marginBottom: '10px' }}
-      />
-      <input
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        style={{ width: '100%', marginBottom: '10px' }}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        style={{ width: '100%', marginBottom: '10px' }}
-      />
-      <select
-        value={role}
-        onChange={(e) => setBatch(e.target.value)}
-        style={{ width: '100%', marginBottom: '10px' }}
-      >
-        <option value="user">Batch 1</option>
-        <option value="admin">Batch 2</option>
-      </select>
-      <button onClick={handleRegister} style={{ width: '100%' }}>Register</button>
-      <p style={{ marginTop: '10px' }}>
-        Already have an account? <a href="/login">Login here</a>
-      </p>
+      <form className='form-box'>
+        <input
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          style={{ width: '100%', marginBottom: '10px' }}
+        />
+        <input
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          style={{ width: '100%', marginBottom: '10px' }}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          style={{ width: '100%', marginBottom: '10px' }}
+        />
+        <select
+          value={role}
+          onChange={(e) => setBatch(e.target.value)}
+          style={{ width: '100%', marginBottom: '10px' }}
+        >
+          <option value="user">Batch 1</option>
+          <option value="admin">Batch 2</option>
+        </select>
+        <button onClick={handleRegister} style={{ width: '100%' }}>Register</button>
+        <p style={{ marginTop: '10px' }}>
+          Already have an account? <a href="/login">Login here</a>
+        </p>
+      </form>
     </div>
   );
 }

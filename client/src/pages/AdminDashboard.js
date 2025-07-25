@@ -29,8 +29,8 @@ const AdminResults = () => {
   }, []);
 
   return (
-    <div style={{ padding: 20 }}>
-      <button onClick={downloadCSV}>Download CSV</button>
+    <div className='dashboard' style={{ padding: 20 }}>
+      <button className='submit' onClick={downloadCSV}>Download CSV</button>
       <h2>Users' Results</h2>
       {results.map(user => (
         <div key={user.name} style={{ marginBottom: 30 }}>
