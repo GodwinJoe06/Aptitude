@@ -1,15 +1,22 @@
+body{
+  font-family: Arial, sans-serif;
+  background-color:gray;
+  margin: 0;
+  padding: 0;
+}
+
 .login{
   text-align: center;
   margin-top: 20px;
   font-size: 2rem;
-  color: #333;
+  color: black;
 }
 
 .register{
   text-align: center;
   margin-top: 20px;
   font-size: 2rem;
-  color: #333; 
+  color:black; 
 }
 .login-form {
   display: flex;
@@ -17,14 +24,13 @@
   align-items: center;
   justify-content: center;
   min-height: 10vh;
-  background-color: #f2f2f2;
   padding: 2rem;
   margin-left: 500px;
 }
 
 /* Form box styling */
 .form-box {
-  background-color: #fff;
+  background-color:floralwhite;
   padding: 2rem 3rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -81,7 +87,7 @@
 /* Dashboard */
 .dashboard {
   padding: 2rem;
-  background-color: #fff;
+  background-color:floralwhite;
   border-radius: 12px;
   max-width: 800px;
   margin: 2rem auto;

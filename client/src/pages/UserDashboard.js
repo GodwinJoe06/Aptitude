@@ -6,84 +6,81 @@ const Questions = () => {
     const [questions, setQuestions] = useState([]);
     const [userAnswers, setUserAnswers] = useState([]);
     const [submitted, setSubmitted] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(1200); 
+    const [timeLeft, setTimeLeft] = useState(1200);
+    const [results, setResults] = useState();
+    const [storeResults, setStoreResults] = useState(false);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
     const token = localStorage.getItem('token');
 
-useEffect(() => {
-    const handleVisibilityChange = () => {
-        if (document.hidden && !submitted) {
-            handleSubmitAnswers();
-        }
-    };
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.hidden && !submitted) {
+                handleSubmitAnswers();
+            }
+        };
 
-    const handleBeforeUnload = (e) => {
-        if (!submitted) {
-            handleSubmitAnswers();
-        }
-        e.preventDefault();
-        e.returnValue = '';
-    };
+        const handleBeforeUnload = (e) => {
+            if (!submitted) {
+                handleSubmitAnswers();
+            }
+            e.preventDefault();
+            e.returnValue = '';
+        };
 
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('beforeunload', handleBeforeUnload);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('beforeunload', handleBeforeUnload);
 
-    return () => {
-        document.removeEventListener('visibilitychange', handleVisibilityChange);
-        window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-}, [submitted, questions, userAnswers]);
-
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [submitted]);
 
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
-                const response = await axios.get('https://aptitude-ohar.onrender.com/api/user/questions', {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+                const res = await axios.get('https://aptitude-ohar.onrender.com/api/user/questions', {
+                    headers: { Authorization: `Bearer ${token}` }
                 });
-                setQuestions(response.data);
-                setUserAnswers(Array(response.data.length).fill(''));
+                setQuestions(res.data);
+                setUserAnswers(Array(res.data.length).fill(''));
             } catch (err) {
-                console.error('Failed to fetch questions:', err);
+                console.error(err);
             }
         };
         fetchQuestions();
-    }, [token]);
+    }, []);
 
     useEffect(() => {
-        if (submitted || timeLeft <= 0) return;
-
         const timer = setInterval(() => {
-            setTimeLeft((prev) => prev - 1);
+            setTimeLeft((prevTime) => {
+                if (prevTime <= 1) {
+                    clearInterval(timer);
+                    handleSubmitAnswers();
+                    return 0;
+                }
+                return prevTime - 1;
+            });
         }, 1000);
-
         return () => clearInterval(timer);
-    }, [timeLeft, submitted]);
+    }, []);
 
-    useEffect(() => {
-        if (timeLeft === 0 && !submitted) {
-            handleSubmitAnswers();
-        }
-    }, [timeLeft, submitted]);
-
-    const handleOptionChange = (index, value) => {
+    const handleOptionChange = (e) => {
         const updatedAnswers = [...userAnswers];
-        updatedAnswers[index] = value;
+        updatedAnswers[currentQuestionIndex] = e.target.value;
         setUserAnswers(updatedAnswers);
     };
 
     const handleSubmitAnswers = async () => {
         if (submitted) return;
-
         try {
             for (let i = 0; i < questions.length; i++) {
-                const response = await axios.post(
+                await axios.post(
                     'https://aptitude-ohar.onrender.com/api/user/answers',
                     {
                         questionId: questions[i]._id,
-                        answer: userAnswers[i] ? userAnswers[i] : 'Therila',
+                        answer: userAnswers[i] ? userAnswers[i] : 'Not Answered',
                     },
                     {
                         headers: {
@@ -98,44 +95,105 @@ useEffect(() => {
         }
     };
 
-    const formatTime = (seconds) => {
-        const min = Math.floor(seconds / 60);
-        const sec = seconds % 60;
-        return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
-    };
+    useEffect(() => {
+
+        if(!submitted) return;
+  const userId = localStorage.getItem('userId'); 
+
+  if (!userId) {
+    console.error('User ID not found in localStorage');
+    return;
+  }
+
+  axios.get(`https://aptitude-ohar.onrender.com/api/user/results?userId=${userId}`)
+    .then((res) => {
+      setResults(res.data);
+      setStoreResults(true);
+    })
+    .catch((err) => {
+      console.error('Error fetching results:', err);
+    });
+}, [submitted]);
+
+
+    const currentQuestion = questions[currentQuestionIndex];
 
     return (
-        <div className='dashboard' style={{ padding: 20 }}>
-            <h1>Survey Questions</h1>
-            {!submitted ? (
+        <div className="dashboard">
+            <h2>Interview Test</h2>
+
+            {submitted && storeResults? (
                 <div>
-                    <h3>Time Left: {formatTime(timeLeft)}</h3>
-                    {questions.map((question, index) => (
-                        <div key={index}>
-                            <h2>{question.question}</h2>
-                            <div>
-                                {question.options.map((option, optionIndex) => (
-                                    <div key={optionIndex}>
-                                        <input
-                                            type="radio"
-                                            id={`question${index}_option${optionIndex}`}
-                                            name={`question${index}`}
-                                            value={option}
-                                            checked={userAnswers[index] === option}
-                                            onChange={(e) => handleOptionChange(index, e.target.value)}
-                                        />
-                                        <label htmlFor={`question${index}_option${optionIndex}`}>{option}</label>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
-                    <button className='submit' onClick={handleSubmitAnswers}>Submit Answers</button>
+                    <h3>Test Submitted. Here are your answers:</h3>
+                    <progress value={results.score} max={results.answers.length} style={{ width: '100%' }} />
+                    <strong>Score:</strong> {results.score}<br />
+                    <ul>
+                        {questions.map((question, idx) => (
+                            <li key={question._id}>
+                                <strong>Q{idx + 1}:</strong> {question.question}<br />
+                                <strong>Your Answer:</strong> {userAnswers[idx] || 'Not Answered'}<br />
+                                <strong>Correct Answer:</strong> {results.answers[idx]?.correctAnswer || 'N/A'}<br />
+                                <strong>Status:</strong> {results.answers[idx]?.isCorrect ? 'Correct' : 'Wrong'}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            ) : questions.length > 0 ? (
+                <div className="question-card">
+                    <p>Time left: {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</p>
+                    <progress value={timeLeft} max={1200} style={{ width: '100%' }} />
+                    <div className="question-navigation">
+                        {questions.map((_, idx) => (
+                            <button
+                                key={idx}
+                                className={idx === currentQuestionIndex ? 'active-question' : ''}
+                                onClick={() => setCurrentQuestionIndex(idx)}
+                            >
+                                {idx + 1}
+                            </button>
+                        ))}
+                    </div>
+
+                    <p><strong>Question {currentQuestionIndex + 1}:</strong> {currentQuestion.question}</p>
+                    <div className="options">
+                        {currentQuestion.options.map((option, idx) => (
+                            <label key={idx} style={{ display: 'block', margin: '8px 0' }}>
+                                <input
+                                    type="radio"
+                                    name={`question-${currentQuestionIndex}`}
+                                    value={option}
+                                    checked={userAnswers[currentQuestionIndex] === option}
+                                    onChange={handleOptionChange}
+                                />
+                                {option}
+                            </label>
+                        ))}
+                    </div>
+
+                    <div className="navigation-buttons">
+                        <button
+                            onClick={() => setCurrentQuestionIndex(currentQuestionIndex - 1)}
+                            disabled={currentQuestionIndex === 0}
+                        >
+                            Previous
+                        </button>
+
+                        <button
+                            onClick={() => setCurrentQuestionIndex(currentQuestionIndex + 1)}
+                            disabled={currentQuestionIndex === questions.length - 1}
+                        >
+                            Next
+                        </button>
+                    </div>
+
+                    {currentQuestionIndex === questions.length - 1 && (
+                        <button className="submit-btn" onClick={handleSubmitAnswers}>
+                            Submit
+                        </button>
+                    )}
                 </div>
             ) : (
-                <div>
-                    <h2>Thanks for attending the exam.</h2>
-                </div>
+                <p>Loading questions...</p>
             )}
         </div>
     );

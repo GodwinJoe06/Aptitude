@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -19,6 +19,7 @@ export default function Login() {
 
       localStorage.setItem('token', token);
       localStorage.setItem('role', user.role);
+      localStorage.setItem('userId', user.id);
 
       if (user.role === 'admin') {
         navigate('/admin');
@@ -27,6 +28,7 @@ export default function Login() {
       }
 
     } catch (err) {
+      alert(err.response?.data?.msg || 'Login failed.');
       console.error('Login failed:', err);
     }
   };
@@ -36,7 +38,7 @@ export default function Login() {
     <div>
       <h2 className='login'>Login</h2>
       <form className='form-box login-form'>
-        <input placeholder="email" onChange={e => setEmail(e.target.value)} />
+        <input type='email' placeholder="email" onChange={e => setEmail(e.target.value)} />
         <input type="password" placeholder="password" onChange={e => setPassword(e.target.value)} />
         <button onClick={handleLogin}>Login</button>
       </form>
