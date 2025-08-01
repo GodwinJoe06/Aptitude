@@ -8,6 +8,7 @@ const Questions = () => {
     const [submitted, setSubmitted] = useState(false);
     const [timeLeft, setTimeLeft] = useState(1200);
     const [results, setResults] = useState();
+    const [attempted, setAttempted] = useState(false);
     const [storeResults, setStoreResults] = useState(false);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
@@ -137,7 +138,7 @@ const Questions = () => {
         <div className="dashboard">
             <h2>Interview Test</h2>
 
-            {submitted && storeResults? (
+            {(attempted || (submitted && storeResults)) && results ? (
                 <div>
                     <h3>Test Submitted. Here are your answers:</h3>
                     <progress value={results.score} max={results.answers.length} style={{ width: '100%' }} />
