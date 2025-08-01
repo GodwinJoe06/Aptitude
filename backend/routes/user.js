@@ -13,7 +13,6 @@ const router = express.Router();
 router.post('/answers', auth,limitDailyAttempt, async (req, res) => {
   const userId = req.user.id;
   const { questionId, answer } = req.body;
-  console.log('Received answer:', { userId, questionId, answer });
 
   try {
     const question = await Question.findById(questionId);
@@ -116,6 +115,28 @@ router.get('/questions', async (req, res) => {
     res.json(questions);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
+  }
+});
+
+router.get('/attempted', async (req, res) => {
+  const userId = req.query.userId;
+
+  if (!userId) {
+    return res.status(400).json({ msg: 'userId is required in query params' });
+  }
+
+  try {
+    const alreadyAttended = await Attended.findOne({ userId });
+
+    if (alreadyAttended && alreadyAttended.alreadyAttended) {
+      return res.status(200).json({
+        msg: 'User has already attempted the exam.',
+        alreadyAttended: true,
+      });
+    }
+  } catch (err) {
+    console.error('Error:', err.message);
+    res.status(500).json({ msg: 'Server error' });
   }
 });
 

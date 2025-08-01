@@ -115,6 +115,21 @@ const Questions = () => {
     });
 }, [submitted]);
 
+ useEffect(() => {
+        const userId = localStorage.getItem('userId');
+
+        if (!userId) return;
+
+        axios
+            .get(`http://localhost:5000/api/user/attempted?userId=${userId}`)
+            .then((res) => {
+                if (res.data.alreadyAttended) {
+                    setAttempted(true);
+                    setSubmitted(true);
+                }
+            })
+    }, []);
+
 
     const currentQuestion = questions[currentQuestionIndex];
 
@@ -131,7 +146,7 @@ const Questions = () => {
                         {questions.map((question, idx) => (
                             <li key={question._id}>
                                 <strong>Q{idx + 1}:</strong> {question.question}<br />
-                                <strong>Your Answer:</strong> {userAnswers[idx] || 'Not Answered'}<br />
+                                <strong>Your Answer:</strong> {results.answers[idx].userAnswer || 'Not Answered'}<br />
                                 <strong>Correct Answer:</strong> {results.answers[idx]?.correctAnswer || 'N/A'}<br />
                                 <strong>Status:</strong> {results.answers[idx]?.isCorrect ? 'Correct' : 'Wrong'}
                             </li>
