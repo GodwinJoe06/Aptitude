@@ -122,7 +122,7 @@ const Questions = () => {
         if (!userId) return;
 
         axios
-            .get(`http://localhost:5000/api/user/attempted?userId=${userId}`)
+            .get(`https://aptitude-ohar.onrender.com/api/user/attempted?userId=${userId}`)
             .then((res) => {
                 if (res.data.alreadyAttended) {
                     setAttempted(true);
