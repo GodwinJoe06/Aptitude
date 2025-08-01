@@ -27,14 +27,6 @@ router.post('/login', async (req, res) => {
     return res.status(400).json({ msg: 'Invalid credentials' });
   }
 
-  const alreadyAttended = await Attended.find({ userId: userId._id });
-  // console.log('Already attended:', alreadyAttended); 
-  if (alreadyAttended.length > 0 && alreadyAttended[0].alreadyAttended) {
-    return res.status(400).json({ msg: 'You have already attempted the exam today.' });
-  }
-  
-  console.log('User found:', { userId: userId._id });
-
   const user = await User.findOne({ email });
   if (!user) {
     return res.status(400).json({ msg: 'Invalid credentials' });

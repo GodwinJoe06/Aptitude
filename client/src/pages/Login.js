@@ -28,7 +28,6 @@ export default function Login() {
       }
 
     } catch (err) {
-      alert(err.response?.data?.msg || 'Login failed.');
       console.error('Login failed:', err);
     }
   };
